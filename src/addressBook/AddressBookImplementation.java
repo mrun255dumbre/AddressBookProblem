@@ -26,28 +26,33 @@ public class AddressBookImplementation implements AddressBookInterface{
 
 		try {
 			FileWriter fileWriter = new FileWriter("addressBook.csv");
-	        fileWriter.append("FirstName,LastName,Address,State,City,Zip,PhoneNumber");
-			System.out.println("Enter First Name : ");
-	    	firstName=sc.next();
-
-	    	System.out.println("Enter Last Name : ");
-	    	lastName=sc.next();
-
-	    	System.out.println("Enter Address : ");
-	    	address=sc.next();
-
-	    	System.out.println("Enter City : ");
-	    	city=sc.next();
-
-	    	System.out.println("Enter State : ");
-	    	state=sc.next();
-
-	    	System.out.println("Enter Zipcode : ");
-	    	zip=sc.next();
-
-	    	System.out.println("Enter Phone Number : ");
-	    	phoneNumber=sc.next();
-	    	addressBookArrayList.add(new Person(firstName,lastName,address,city,state,zip,phoneNumber));
+			System.out.println("How many contacts you want to add? :");
+            int numberOfContacts=sc.nextInt();
+            
+            for(int i = 0; i < numberOfContacts; i++) {
+		        fileWriter.append("FirstName,LastName,Address,State,City,Zip,PhoneNumber");
+				System.out.println("Enter First Name : ");
+		    	firstName=sc.next();
+	
+		    	System.out.println("Enter Last Name : ");
+		    	lastName=sc.next();
+	
+		    	System.out.println("Enter Address : ");
+		    	address=sc.next();
+	
+		    	System.out.println("Enter City : ");
+		    	city=sc.next();
+	
+		    	System.out.println("Enter State : ");
+		    	state=sc.next();
+	
+		    	System.out.println("Enter Zipcode : ");
+		    	zip=sc.next();
+	
+		    	System.out.println("Enter Phone Number : ");
+		    	phoneNumber=sc.next();
+		    	addressBookArrayList.add(new Person(firstName,lastName,address,city,state,zip,phoneNumber));
+            }
 	    	for (Person person : addressBookArrayList) {
 		    	fileWriter.append(new_line);
 		    	fileWriter.append(person.getFirstName());

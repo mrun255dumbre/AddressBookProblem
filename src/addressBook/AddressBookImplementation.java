@@ -23,14 +23,15 @@ public class AddressBookImplementation implements AddressBookInterface{
 	public void addPerson() {
 		String new_line="\n";
 		String comma=",";
-
+		boolean personExists=false;
+		
 		try {
-			FileWriter fileWriter = new FileWriter("addressBook.csv");
+			FileWriter fileWriter = new FileWriter("addressBook.csv",true);
+			
 			System.out.println("How many contacts you want to add? :");
             int numberOfContacts=sc.nextInt();
             
             for(int i = 0; i < numberOfContacts; i++) {
-		        fileWriter.append("FirstName,LastName,Address,State,City,Zip,PhoneNumber");
 				System.out.println("Enter First Name : ");
 		    	firstName=sc.next();
 	
@@ -53,23 +54,38 @@ public class AddressBookImplementation implements AddressBookInterface{
 		    	phoneNumber=sc.next();
 		    	addressBookArrayList.add(new Person(firstName,lastName,address,city,state,zip,phoneNumber));
             }
-	    	for (Person person : addressBookArrayList) {
-		    	fileWriter.append(new_line);
-		    	fileWriter.append(person.getFirstName());
-		    	fileWriter.append(comma);
-		    	fileWriter.append(person.getLastName());
-		    	fileWriter.append(comma);
-		    	fileWriter.append(person.getAddress());
-		    	fileWriter.append(comma);
-		    	fileWriter.append(person.getCity());
-		    	fileWriter.append(comma);
-		    	fileWriter.append(person.getState());
-		    	fileWriter.append(comma);
-		    	fileWriter.append(person.getZip());
-		    	fileWriter.append(comma);
-		    	fileWriter.append(person.getPhoneNumber());
-		    	fileWriter.append(comma);
-	    	}
+            
+            Scanner scanner = new Scanner(new File("addressBook.csv"));
+            while (scanner.hasNextLine()) {
+    			String lineToFind = scanner.nextLine();
+    			if (lineToFind.trim().contains(firstName)) {
+    				System.out.println("Person already exists"+lineToFind);
+    			}
+    			else {
+    				personExists=true;
+    			}
+    		}
+            
+            if(!personExists) {
+		    	for (Person person : addressBookArrayList) {
+			    	fileWriter.append(new_line);
+			    	fileWriter.append(person.getFirstName());
+			    	fileWriter.append(comma);
+			    	fileWriter.append(person.getLastName());
+			    	fileWriter.append(comma);
+			    	fileWriter.append(person.getAddress());
+			    	fileWriter.append(comma);
+			    	fileWriter.append(person.getCity());
+			    	fileWriter.append(comma);
+			    	fileWriter.append(person.getState());
+			    	fileWriter.append(comma);
+			    	fileWriter.append(person.getZip());
+			    	fileWriter.append(comma);
+			    	fileWriter.append(person.getPhoneNumber());
+			    	fileWriter.append(comma);
+			    	
+		    	}
+            }
 	    	fileWriter.flush();
         	fileWriter.close();
         }
@@ -154,7 +170,6 @@ public class AddressBookImplementation implements AddressBookInterface{
 		File inFile = new File((fileName+".csv"));
 		File tempFile = new File("temp.csv");
 		
-		BufferedReader br;
 		try {
 			br = new BufferedReader(new FileReader(inFile));
 			PrintWriter pw = new PrintWriter(new FileWriter(tempFile));

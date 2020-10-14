@@ -16,7 +16,7 @@ public class AddressBookMain {
 			System.out.println("\t1.Add Person in address Book\n"
 			+"\t2.Edit Person in address Book\n"
 			+"\t3.Delete Person in address Book\n"
-			+"\t4.Display address Book\n");
+			+"\t4.Display address Book");
 			System.out.println("Enter your choice - ");  
 			int choice= sc.nextInt();
 			switch(choice) {

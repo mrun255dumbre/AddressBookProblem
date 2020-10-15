@@ -30,7 +30,7 @@ public class AddressBookImplementation implements AddressBookInterface {
 		
 		try {
 			FileWriter fileWriter = new FileWriter("addressBook.csv");
-			fileWriter.append("FirstName,LastName,Address,State,City,Zip,PhoneNumber");
+			fileWriter.append("FirstName,LastName,Address,City,State,Zip,PhoneNumber");
 			System.out.println("How many contacts you want to add? :");
             int numberOfContacts=sc.nextInt();
             
@@ -228,6 +228,62 @@ public class AddressBookImplementation implements AddressBookInterface {
 						+ P.getZip() + " " + P.getPhoneNumber());
 			}
 			System.out.println("");
+	}
+	
+	@Override
+	public void sort(String fileName) {
+		final int SORT_CITY=1;
+		final int SORT_STATE=2;
+		final int SORT_ZIP=3;
+		System.out.println("\t1.Sort by City in address Book\n"
+		+"\t2.Sort by State in address Book\n"
+		+"\t3.Sort by Zip in address Book");
+		System.out.println("Enter your choice - ");  
+		int choice= sc.nextInt();
+		switch(choice) {
+			case SORT_CITY:
+				sortByCity(fileName);
+				break;
+			case SORT_STATE:
+				sortByState(fileName);
+				break;
+			case SORT_ZIP:
+				sortByZip(fileName);
+				break;
+			default:
+				System.out.println("Wrong choice! Please select from the above option");
+				break;
+		}
+	}
+	
+	public void sortByZip(String fileName) {
+			Collections.sort(personList(fileName), new SortByZip());
+			System.out.println("Data after Sort By Zip: ");
+			for (Person P : lines) {
+				System.out.println(P.getFirstName() + " " + P.getLastName() + " " + P.getAddress() + " " + P.getCity() + " " + P.getState() + " "
+						+ P.getZip() + " " + P.getPhoneNumber());
+			}
+			System.out.println("");
+	}
+	
+	public void sortByCity(String fileName) {
+		Collections.sort(personList(fileName), new SortByCity());
+		System.out.println("Data after Sort By City: ");
+		for (Person P : lines) {
+			System.out.println(P.getFirstName() + " " + P.getLastName() + " " + P.getAddress() + " " + P.getCity() + " " + P.getState() + " "
+					+ P.getZip() + " " + P.getPhoneNumber());
+		}
+		System.out.println("");
+	}
+	
+	public void sortByState(String fileName) {
+		Collections.sort(personList(fileName), new SortByState());
+		System.out.println("Data after Sort By State: ");
+		for (Person P : lines) {
+			System.out.println(P.getFirstName() + " " + P.getLastName() + " " + P.getAddress() + " " + P.getCity() + " " + P.getState() + " "
+					+ P.getZip() + " " + P.getPhoneNumber());
+		}
+		System.out.println("");
 	}
 	
 	public ArrayList<Person> personList(String fileName) {

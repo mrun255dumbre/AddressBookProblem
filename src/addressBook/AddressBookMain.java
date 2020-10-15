@@ -9,10 +9,12 @@ public class AddressBookMain {
 	public static final int DISPLAY=4;
 	public static final int SORT_BY_NAME=5;
 	public static final int SORT=6;
+	public static final int SEARCH=7;
 	
 	public static void main(String[] args) {
 		AddressBookImplementation addressBookImplementation = new AddressBookImplementation();
 		Scanner sc = new Scanner(System.in);
+		String fileName = "addressBook";
 		while(true) {
 			System.out.println("Welcome to Address Book Program");
 			System.out.println("\t1.Add Person in address Book\n"
@@ -20,7 +22,8 @@ public class AddressBookMain {
 			+"\t3.Delete Person in address Book\n"
 			+"\t4.Display address Book\n"
 			+"\t5.Sort by Name in address Book\n"
-			+"\t6.Sort by City,State,Zip in address Book");
+			+"\t6.Sort by City,State,Zip in address Book\n"
+			+"\t7.Search Person in address Book");
 			System.out.println("Enter your choice - ");  
 			int choice= sc.nextInt();
 			switch(choice) {
@@ -28,19 +31,22 @@ public class AddressBookMain {
 					addressBookImplementation.addPerson();
 					break;
 				case EDIT_PERSON:
-					addressBookImplementation.editPerson("addressBook");
+					addressBookImplementation.editPerson(fileName);
 					break;
 				case DELETE_PERSON:
-					addressBookImplementation.deletePerson("addressBook");
+					addressBookImplementation.deletePerson(fileName);
 					break;
 				case DISPLAY:
-					addressBookImplementation.display("addressBook");
+					addressBookImplementation.display(fileName);
 					break;
 				case SORT_BY_NAME:
-					addressBookImplementation.sortByName("addressBook");
+					addressBookImplementation.sortByName(fileName);
 					break;
 				case SORT:
-					addressBookImplementation.sort("addressBook");
+					addressBookImplementation.sort(fileName);
+					break;
+				case SEARCH:
+					addressBookImplementation.searchPerson(fileName);
 					break;
 				default:
 					System.out.println("Wrong choice! Please select from the above option");

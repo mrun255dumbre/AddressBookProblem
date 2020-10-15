@@ -29,8 +29,7 @@ public class AddressBookImplementation implements AddressBookInterface {
 		boolean personExists=false;
 		
 		try {
-			FileWriter fileWriter = new FileWriter("addressBook.csv");
-			fileWriter.append("FirstName,LastName,Address,City,State,Zip,PhoneNumber");
+			FileWriter fileWriter = new FileWriter("addressBook.csv",true);
 			System.out.println("How many contacts you want to add? :");
             int numberOfContacts=sc.nextInt();
             
@@ -62,16 +61,14 @@ public class AddressBookImplementation implements AddressBookInterface {
             while (scanner.hasNextLine()) {
     			String lineToFind = scanner.nextLine();
     			if (lineToFind.trim().contains(firstName)) {
-    				System.out.println("Person already exists"+lineToFind);
-    			}
-    			else {
+    				System.out.println("Person already exists\n"+lineToFind);
     				personExists=true;
     			}
     		}
             
             if(!personExists) {
 		    	for (Person person : addressBookArrayList) {
-			    	fileWriter.append(new_line);
+			   
 			    	fileWriter.append(person.getFirstName());
 			    	fileWriter.append(comma);
 			    	fileWriter.append(person.getLastName());
@@ -86,7 +83,7 @@ public class AddressBookImplementation implements AddressBookInterface {
 			    	fileWriter.append(comma);
 			    	fileWriter.append(person.getPhoneNumber());
 			    	fileWriter.append(comma);
-			    	
+			    	fileWriter.append(new_line);
 		    	}
             }
 	    	fileWriter.flush();
@@ -211,7 +208,8 @@ public class AddressBookImplementation implements AddressBookInterface {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-
+		System.out.println("First Name,Last Name,Address,C"
+				+ "ity,State,Zip,Phone Number");
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
 			System.out.println(line);
@@ -284,6 +282,40 @@ public class AddressBookImplementation implements AddressBookInterface {
 					+ P.getZip() + " " + P.getPhoneNumber());
 		}
 		System.out.println("");
+	}
+	
+	@Override
+	public void searchPerson(String fileName) {
+		File input = new File((fileName+".csv"));
+		FileReader fr = null;
+		flag=0;
+		String search, str;
+		System.out.println("Please enter city for search :");
+		search = sc.nextLine();
+		
+		try {
+			fr = new FileReader(input);
+			br = new BufferedReader(fr);
+			System.out.println("Record found:");
+			while ((str = br.readLine()) != null) {
+				if (str.contains(search)) {
+					flag++;
+					System.out.println("\t" + str);
+				}
+			}
+			if(flag==0)
+				System.out.println("City not exist!");
+
+			fr.close();
+			br.close();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
 	}
 	
 	public ArrayList<Person> personList(String fileName) {

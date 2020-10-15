@@ -9,15 +9,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Scanner;
 
-public class AddressBookImplementation implements AddressBookInterface{
+public class AddressBookImplementation implements AddressBookInterface {
 	String firstName,lastName,address,city,state,zip,phoneNumber;
 	int flag = 0;
 	public static File file;
 	BufferedReader br;
 	BufferedWriter bw;
 	ArrayList<Person> addressBookArrayList=new ArrayList<Person>();
+	ArrayList<Person> lines=new ArrayList<Person>();
 	Scanner sc = new Scanner(System.in);
 	@Override
 	public void addPerson() {
@@ -26,8 +29,8 @@ public class AddressBookImplementation implements AddressBookInterface{
 		boolean personExists=false;
 		
 		try {
-			FileWriter fileWriter = new FileWriter("addressBook.csv",true);
-			
+			FileWriter fileWriter = new FileWriter("addressBook.csv");
+			fileWriter.append("FirstName,LastName,Address,State,City,Zip,PhoneNumber");
 			System.out.println("How many contacts you want to add? :");
             int numberOfContacts=sc.nextInt();
             
@@ -213,6 +216,49 @@ public class AddressBookImplementation implements AddressBookInterface{
 			String line = scanner.nextLine();
 			System.out.println(line);
 		}
+	}
+	
+	
+	@Override
+	public void sortByName(String fileName) {
+			Collections.sort(personList(fileName), new Sort());
+			System.out.println("Records after Sort By Name: ");
+			for (Person P : lines) {
+				System.out.println(P.getFirstName() + " " + P.getLastName() + " " + P.getAddress() + " " + P.getCity() + " " + P.getState() + " "
+						+ P.getZip() + " " + P.getPhoneNumber());
+			}
+			System.out.println("");
+	}
+	
+	public ArrayList<Person> personList(String fileName) {
+		File inFile = new File((fileName+".csv"));
+		
+		try {
+		
+			br = new BufferedReader(new FileReader(inFile));
+			String currentLine = br.readLine();
+		
+			while (currentLine != null) {
+				String[] persondetails = currentLine.split(",");
+				String firstname = persondetails[0];
+				String lastname = persondetails[1];
+				String address = persondetails[2];
+				String city = persondetails[3];
+				String state = persondetails[4];
+				String zipcode = persondetails[5];
+				String phonenumber = persondetails[6];
+				lines.add(new Person(firstname, lastname,address, city, state, zipcode, phonenumber));
+				currentLine = br.readLine();
+			}
+			br.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		return lines;
 	}
 	
 }

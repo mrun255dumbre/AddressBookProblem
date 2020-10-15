@@ -7,6 +7,7 @@ public class AddressBookMain {
 	public static final int EDIT_PERSON=2;
 	public static final int DELETE_PERSON=3;
 	public static final int DISPLAY=4;
+	public static final int SORT_BY_NAME=5;
 	
 	public static void main(String[] args) {
 		AddressBookImplementation addressBookImplementation = new AddressBookImplementation();
@@ -16,7 +17,8 @@ public class AddressBookMain {
 			System.out.println("\t1.Add Person in address Book\n"
 			+"\t2.Edit Person in address Book\n"
 			+"\t3.Delete Person in address Book\n"
-			+"\t4.Display address Book");
+			+"\t4.Display address Book\n"
+			+"\t5.Sort by Name in address Book");
 			System.out.println("Enter your choice - ");  
 			int choice= sc.nextInt();
 			switch(choice) {
@@ -31,6 +33,9 @@ public class AddressBookMain {
 					break;
 				case DISPLAY:
 					addressBookImplementation.display("addressBook");
+					break;
+				case SORT_BY_NAME:
+					addressBookImplementation.sortByName("addressBook");
 					break;
 				default:
 					System.out.println("Wrong choice! Please select from the above option");

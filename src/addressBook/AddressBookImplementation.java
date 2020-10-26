@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class AddressBookImplementation implements AddressBookInterface {
 	String firstName,lastName,address,city,state,zip,phoneNumber;
@@ -208,7 +209,6 @@ public class AddressBookImplementation implements AddressBookInterface {
 		personList(fileName).stream().forEach(System.out::println);
 	}
 	
-	
 	@Override
 	public void sortByName(String fileName) {
 			personList(fileName).stream().sorted((s1, s2) -> (s1.getFirstName()).compareTo(s2.getFirstName())).forEach(System.out::println);
@@ -258,36 +258,10 @@ public class AddressBookImplementation implements AddressBookInterface {
 	
 	@Override
 	public void searchPerson(String fileName) {
-		File input = new File((fileName+".csv"));
-		FileReader fr = null;
-		flag=0;
-		String search, str;
+		String search;
 		System.out.println("Please enter city for search :");
-		search = sc.nextLine();
-		
-		try {
-			fr = new FileReader(input);
-			br = new BufferedReader(fr);
-			System.out.println("Record found:");
-			while ((str = br.readLine()) != null) {
-				if (str.contains(search)) {
-					flag++;
-					System.out.println("\t" + str);
-				}
-			}
-			if(flag==0)
-				System.out.println("City not exist!");
-
-			fr.close();
-			br.close();
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		
+		search = sc.next();
+		personList(fileName).stream().filter(searchString -> searchString.getCity().trim().contains(search)).forEach(System.out::println);
 	}
 	
 	@Override

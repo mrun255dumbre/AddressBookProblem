@@ -205,19 +205,7 @@ public class AddressBookImplementation implements AddressBookInterface {
 	
 	@Override
 	public void display(String fileName) {
-		Scanner scanner = new Scanner(System.in);
-		System.out.println("Records Present in System :");
-		try {
-			scanner = new Scanner(new File(fileName+".csv"));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		System.out.println("First Name,Last Name,Address,C"
-				+ "ity,State,Zip,Phone Number");
-		while (scanner.hasNextLine()) {
-			String line = scanner.nextLine();
-			System.out.println(line);
-		}
+		personList(fileName).stream().forEach(System.out::println);
 	}
 	
 	

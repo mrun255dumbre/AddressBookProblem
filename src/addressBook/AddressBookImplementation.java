@@ -6,11 +6,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Scanner;
 
 public class AddressBookImplementation implements AddressBookInterface {
@@ -22,14 +25,16 @@ public class AddressBookImplementation implements AddressBookInterface {
 	ArrayList<Person> addressBookArrayList=new ArrayList<Person>();
 	ArrayList<Person> lines=new ArrayList<Person>();
 	Scanner sc = new Scanner(System.in);
+	
+	
 	@Override
-	public void addPerson() {
+	public void addPerson(String fileName) {
 		String new_line="\n";
 		String comma=",";
 		boolean personExists=false;
 		
 		try {
-			FileWriter fileWriter = new FileWriter("addressBook.csv",true);
+			FileWriter fileWriter = new FileWriter(fileName+".csv",true);
 			System.out.println("How many contacts you want to add? :");
             int numberOfContacts=sc.nextInt();
             
@@ -57,7 +62,7 @@ public class AddressBookImplementation implements AddressBookInterface {
 		    	addressBookArrayList.add(new Person(firstName,lastName,address,city,state,zip,phoneNumber));
             }
             
-            Scanner scanner = new Scanner(new File("addressBook.csv"));
+            Scanner scanner = new Scanner(new File(fileName+".csv"));
             while (scanner.hasNextLine()) {
     			String lineToFind = scanner.nextLine();
     			if (lineToFind.trim().contains(firstName)) {
@@ -68,7 +73,7 @@ public class AddressBookImplementation implements AddressBookInterface {
             
             if(!personExists) {
 		    	for (Person person : addressBookArrayList) {
-			   
+		    		fileWriter.append(new_line);
 			    	fileWriter.append(person.getFirstName());
 			    	fileWriter.append(comma);
 			    	fileWriter.append(person.getLastName());
@@ -83,7 +88,6 @@ public class AddressBookImplementation implements AddressBookInterface {
 			    	fileWriter.append(comma);
 			    	fileWriter.append(person.getPhoneNumber());
 			    	fileWriter.append(comma);
-			    	fileWriter.append(new_line);
 		    	}
             }
 	    	fileWriter.flush();
@@ -219,13 +223,8 @@ public class AddressBookImplementation implements AddressBookInterface {
 	
 	@Override
 	public void sortByName(String fileName) {
-			Collections.sort(personList(fileName), new Sort());
-			System.out.println("Records after Sort By Name: ");
-			for (Person P : lines) {
-				System.out.println(P.getFirstName() + " " + P.getLastName() + " " + P.getAddress() + " " + P.getCity() + " " + P.getState() + " "
-						+ P.getZip() + " " + P.getPhoneNumber());
-			}
-			System.out.println("");
+			personList(fileName).stream().sorted((s1, s2) -> (s1.getFirstName()).compareTo(s2.getFirstName())).forEach(System.out::println);
+			lines.clear();
 	}
 	
 	@Override
@@ -255,33 +254,18 @@ public class AddressBookImplementation implements AddressBookInterface {
 	}
 	
 	public void sortByZip(String fileName) {
-			Collections.sort(personList(fileName), new SortByZip());
-			System.out.println("Data after Sort By Zip: ");
-			for (Person P : lines) {
-				System.out.println(P.getFirstName() + " " + P.getLastName() + " " + P.getAddress() + " " + P.getCity() + " " + P.getState() + " "
-						+ P.getZip() + " " + P.getPhoneNumber());
-			}
-			System.out.println("");
+			personList(fileName).stream().sorted((s1, s2) -> (s1.getZip()).compareTo(s2.getZip())).forEach(System.out::println);
+			lines.clear();
 	}
 	
 	public void sortByCity(String fileName) {
-		Collections.sort(personList(fileName), new SortByCity());
-		System.out.println("Data after Sort By City: ");
-		for (Person P : lines) {
-			System.out.println(P.getFirstName() + " " + P.getLastName() + " " + P.getAddress() + " " + P.getCity() + " " + P.getState() + " "
-					+ P.getZip() + " " + P.getPhoneNumber());
-		}
-		System.out.println("");
+		personList(fileName).stream().sorted((s1, s2) -> (s1.getCity()).compareTo(s2.getCity())).forEach(System.out::println);
+		lines.clear();
 	}
 	
 	public void sortByState(String fileName) {
-		Collections.sort(personList(fileName), new SortByState());
-		System.out.println("Data after Sort By State: ");
-		for (Person P : lines) {
-			System.out.println(P.getFirstName() + " " + P.getLastName() + " " + P.getAddress() + " " + P.getCity() + " " + P.getState() + " "
-					+ P.getZip() + " " + P.getPhoneNumber());
-		}
-		System.out.println("");
+		personList(fileName).stream().sorted((s1, s2) -> (s1.getState()).compareTo(s2.getState())).forEach(System.out::println);
+		lines.clear();
 	}
 	
 	@Override
@@ -316,6 +300,85 @@ public class AddressBookImplementation implements AddressBookInterface {
 				e.printStackTrace();
 			}
 		
+	}
+	
+	@Override
+	public void newAddressBook() {
+		int flag=0;
+		System.out.print("Enter Name for Address Book: ");
+		String newfileName = sc.next();
+		FileWriter fileWriter;
+		newfileName = newfileName+".csv";
+		file = new File(newfileName);
+		
+    	if(file.exists()) {
+    		System.out.println("File name already exists");
+    		newAddressBook();
+    	}else {
+    		flag=1;
+    	}
+		
+		if (flag == 1) 
+		{
+			
+			try {
+				
+				file.createNewFile();
+				fileWriter = new FileWriter(file);
+				
+				bw = new BufferedWriter(fileWriter);
+				bw.write("First_Name");
+				bw.write(",Last_name");
+				bw.write(",Address");
+				bw.write(",City");
+				bw.write(",State");
+				bw.write(",Zipcode");
+				bw.write(",Phone_Number");
+				bw.newLine();
+			
+				System.out.println("Address Book Is Succesfully Created ");
+				bw.close();
+				fileWriter.close();
+			} catch (IOException e) {
+				System.out.println("Some Error Occure During the input");	
+				e.printStackTrace();
+			}
+		}else {
+			System.out.println("Unable to create An AdressBook");
+		}
+	}
+	
+	public String selectAddressBook(){
+		
+		System.out.println("List of Present Address Book - \n");
+		try 
+		{
+            File file = new File(".");
+ 
+            FilenameFilter filter = new FilenameFilter() {
+                @Override
+                public boolean accept(File f, String name) {
+                    return name.endsWith(".csv");
+                }
+            };
+            
+            File[] files = file.listFiles(filter);
+            for (int i = 0; i < files.length; i++) 
+            {
+                System.out.println("\t\t"+files[i].getName());
+            }
+        }catch (Exception e) 
+		{
+            System.err.println(e.getMessage());
+        }
+		System.out.println("Please enter Address Book name -");
+		String fileName = sc.next();
+		file = new File(fileName+".csv");
+		if (file.isFile()) {
+			return fileName;
+		} else
+
+			return null;
 	}
 	
 	public ArrayList<Person> personList(String fileName) {

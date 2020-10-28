@@ -24,7 +24,7 @@ public class AddressBookImplementation implements AddressBookInterface {
 	BufferedReader br;
 	BufferedWriter bw;
 	ArrayList<Person> addressBookArrayList=new ArrayList<Person>();
-	//ArrayList<Person> lines=new ArrayList<Person>();
+	ArrayList<Person> addPerson=new ArrayList<Person>();
 	Scanner sc = new Scanner(System.in);
 	
 	
@@ -32,7 +32,7 @@ public class AddressBookImplementation implements AddressBookInterface {
 	public void addPerson(String fileName) {
 		String new_line="\n";
 		String comma=",";
-		boolean personExists=false;
+		int personExists = 0;
 		
 		try {
 			FileWriter fileWriter = new FileWriter(fileName+".csv",true);
@@ -60,21 +60,13 @@ public class AddressBookImplementation implements AddressBookInterface {
 	
 		    	System.out.println("Enter Phone Number : ");
 		    	phoneNumber=sc.next();
-		    	addressBookArrayList.add(new Person(firstName,lastName,address,city,state,zip,phoneNumber));
+		    	addPerson.add(new Person(firstName,lastName,address,city,state,zip,phoneNumber));
             }
             
-            personList(fileName).stream().filter(searchString -> searchString.getFirstName().trim().contains(firstName)).forEach(System.out::println);
-            /*Scanner scanner = new Scanner(new File(fileName+".csv"));
-            while (scanner.hasNextLine()) {
-    			String lineToFind = scanner.nextLine();
-    			if (lineToFind.trim().equalsIgnoreCase(firstName)) {
-    				System.out.println("Person already exists\n"+lineToFind);
-    				personExists=true;
-    			}
-    		}*/
+            personExists = (int)personList(fileName).stream().filter(searchString -> searchString.getFirstName().equals(firstName)).count();
             
-            if(!personExists) {
-		    	for (Person person : addressBookArrayList) {
+            if(personExists == 0) {
+		    	for (Person person : addPerson) {
 			    	fileWriter.append(person.getFirstName());
 			    	fileWriter.append(comma);
 			    	fileWriter.append(person.getLastName());
@@ -95,6 +87,7 @@ public class AddressBookImplementation implements AddressBookInterface {
 	    	fileWriter.flush();
         	fileWriter.close();
         	addressBookArrayList.clear();
+        	addPerson.clear();
         }
         catch(IOException e) {
         	e.printStackTrace();

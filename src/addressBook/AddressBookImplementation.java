@@ -24,7 +24,7 @@ public class AddressBookImplementation implements AddressBookInterface {
 	BufferedReader br;
 	BufferedWriter bw;
 	ArrayList<Person> addressBookArrayList=new ArrayList<Person>();
-	ArrayList<Person> lines=new ArrayList<Person>();
+	//ArrayList<Person> lines=new ArrayList<Person>();
 	Scanner sc = new Scanner(System.in);
 	
 	
@@ -63,18 +63,18 @@ public class AddressBookImplementation implements AddressBookInterface {
 		    	addressBookArrayList.add(new Person(firstName,lastName,address,city,state,zip,phoneNumber));
             }
             
-            Scanner scanner = new Scanner(new File(fileName+".csv"));
+            personList(fileName).stream().filter(searchString -> searchString.getFirstName().trim().contains(firstName)).forEach(System.out::println);
+            /*Scanner scanner = new Scanner(new File(fileName+".csv"));
             while (scanner.hasNextLine()) {
     			String lineToFind = scanner.nextLine();
-    			if (lineToFind.trim().contains(firstName)) {
+    			if (lineToFind.trim().equalsIgnoreCase(firstName)) {
     				System.out.println("Person already exists\n"+lineToFind);
     				personExists=true;
     			}
-    		}
+    		}*/
             
             if(!personExists) {
 		    	for (Person person : addressBookArrayList) {
-		    		fileWriter.append(new_line);
 			    	fileWriter.append(person.getFirstName());
 			    	fileWriter.append(comma);
 			    	fileWriter.append(person.getLastName());
@@ -89,15 +89,18 @@ public class AddressBookImplementation implements AddressBookInterface {
 			    	fileWriter.append(comma);
 			    	fileWriter.append(person.getPhoneNumber());
 			    	fileWriter.append(comma);
+			    	fileWriter.append(new_line);
 		    	}
             }
 	    	fileWriter.flush();
         	fileWriter.close();
+        	addressBookArrayList.clear();
         }
         catch(IOException e) {
         	e.printStackTrace();
         }
 	}
+	
 	@Override
 	public void editPerson(String fileName) {
 		System.out.println("Enter phone number for edit person data\n");
@@ -207,12 +210,13 @@ public class AddressBookImplementation implements AddressBookInterface {
 	@Override
 	public void display(String fileName) {
 		personList(fileName).stream().forEach(System.out::println);
+		addressBookArrayList.clear();
 	}
 	
 	@Override
 	public void sortByName(String fileName) {
-			personList(fileName).stream().sorted((s1, s2) -> (s1.getFirstName()).compareTo(s2.getFirstName())).forEach(System.out::println);
-			lines.clear();
+		personList(fileName).stream().sorted((s1, s2) -> (s1.getFirstName()).compareTo(s2.getFirstName())).forEach(System.out::println);
+		addressBookArrayList.clear();
 	}
 	
 	@Override
@@ -242,26 +246,27 @@ public class AddressBookImplementation implements AddressBookInterface {
 	}
 	
 	public void sortByZip(String fileName) {
-			personList(fileName).stream().sorted((s1, s2) -> (s1.getZip()).compareTo(s2.getZip())).forEach(System.out::println);
-			lines.clear();
+		personList(fileName).stream().sorted((s1, s2) -> (s1.getZip()).compareTo(s2.getZip())).forEach(System.out::println);
+		addressBookArrayList.clear();
 	}
 	
 	public void sortByCity(String fileName) {
 		personList(fileName).stream().sorted((s1, s2) -> (s1.getCity()).compareTo(s2.getCity())).forEach(System.out::println);
-		lines.clear();
+		addressBookArrayList.clear();
 	}
 	
 	public void sortByState(String fileName) {
 		personList(fileName).stream().sorted((s1, s2) -> (s1.getState()).compareTo(s2.getState())).forEach(System.out::println);
-		lines.clear();
+		addressBookArrayList.clear();
 	}
 	
 	@Override
 	public void searchPerson(String fileName) {
 		String search;
-		System.out.println("Please enter city for search :");
+		System.out.println("Please enter city or state for search :");
 		search = sc.next();
-		personList(fileName).stream().filter(searchString -> searchString.getCity().trim().contains(search)).forEach(System.out::println);
+		personList(fileName).stream().filter(searchString -> searchString.getCity().trim().equalsIgnoreCase(search)||searchString.getState().trim().equalsIgnoreCase(search)).forEach(System.out::println);
+		addressBookArrayList.clear();
 	}
 	
 	@Override
@@ -312,7 +317,7 @@ public class AddressBookImplementation implements AddressBookInterface {
 	
 	public String selectAddressBook(){
 		
-		System.out.println("List of Present Address Book - \n");
+		System.out.println("List of Present Address Book - ");
 		try 
 		{
             File file = new File(".");
@@ -360,7 +365,7 @@ public class AddressBookImplementation implements AddressBookInterface {
 				String state = persondetails[4];
 				String zipcode = persondetails[5];
 				String phonenumber = persondetails[6];
-				lines.add(new Person(firstname, lastname,address, city, state, zipcode, phonenumber));
+				addressBookArrayList.add(new Person(firstname, lastname,address, city, state, zipcode, phonenumber));
 				currentLine = br.readLine();
 			}
 			br.close();
@@ -371,7 +376,7 @@ public class AddressBookImplementation implements AddressBookInterface {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-		return lines;
+		return addressBookArrayList;
 	}
 	
 }

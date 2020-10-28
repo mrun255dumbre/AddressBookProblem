@@ -42,7 +42,14 @@ public class AddressBookImplementation implements AddressBookInterface {
             for(int i = 0; i < numberOfContacts; i++) {
 				System.out.println("Enter First Name : ");
 		    	firstName=sc.next();
-	
+		    	
+		    	personExists = (int)personList(fileName).stream().filter(searchString -> searchString.getFirstName().equals(firstName)).count();
+		    	if(personExists != 0) {
+		    		System.out.println("Person already exists :"+firstName);
+		    		fileWriter.close();
+		    		break;
+		    	}
+		    	
 		    	System.out.println("Enter Last Name : ");
 		    	lastName=sc.next();
 	
@@ -63,27 +70,24 @@ public class AddressBookImplementation implements AddressBookInterface {
 		    	addPerson.add(new Person(firstName,lastName,address,city,state,zip,phoneNumber));
             }
             
-            personExists = (int)personList(fileName).stream().filter(searchString -> searchString.getFirstName().equals(firstName)).count();
-            
-            if(personExists == 0) {
-		    	for (Person person : addPerson) {
-			    	fileWriter.append(person.getFirstName());
-			    	fileWriter.append(comma);
-			    	fileWriter.append(person.getLastName());
-			    	fileWriter.append(comma);
-			    	fileWriter.append(person.getAddress());
-			    	fileWriter.append(comma);
-			    	fileWriter.append(person.getCity());
-			    	fileWriter.append(comma);
-			    	fileWriter.append(person.getState());
-			    	fileWriter.append(comma);
-			    	fileWriter.append(person.getZip());
-			    	fileWriter.append(comma);
-			    	fileWriter.append(person.getPhoneNumber());
-			    	fileWriter.append(comma);
-			    	fileWriter.append(new_line);
-		    	}
-            }
+		    for (Person person : addPerson) {
+			    fileWriter.append(person.getFirstName());
+			    fileWriter.append(comma);
+			    fileWriter.append(person.getLastName());
+			    fileWriter.append(comma);
+			    fileWriter.append(person.getAddress());
+			    fileWriter.append(comma);
+			    fileWriter.append(person.getCity());
+			    fileWriter.append(comma);
+			    fileWriter.append(person.getState());
+			    fileWriter.append(comma);
+			    fileWriter.append(person.getZip());
+			    fileWriter.append(comma);
+			    fileWriter.append(person.getPhoneNumber());
+			    fileWriter.append(comma);
+			    fileWriter.append(new_line);
+		    }
+		    System.out.println("Person record added successfully!!");
 	    	fileWriter.flush();
         	fileWriter.close();
         	addressBookArrayList.clear();
@@ -126,17 +130,18 @@ public class AddressBookImplementation implements AddressBookInterface {
 					String state = sc.next();
 					
 					System.out.println("enter the Zipcode");
-					int zipcode = sc.nextInt();
+					int zipCode = sc.nextInt();
 					
-					String phonenumber = persondetails[6];
+					System.out.println("enter the Phone Number");
+					String phoneNumber = sc.next();
 					
 					bw.write(firstname);
 					bw.write("," + lastname);
 					bw.write("," + address);
 					bw.write("," + city);
 					bw.write("," + state);
-					bw.write("," + zipcode);
-					bw.write("," + phonenumber);
+					bw.write("," + zipCode);
+					bw.write("," + phoneNumber);
 					bw.newLine();
 					flag++;
 				} 
@@ -258,7 +263,7 @@ public class AddressBookImplementation implements AddressBookInterface {
 		String search;
 		System.out.println("Please enter city or state for search :");
 		search = sc.next();
-		personList(fileName).stream().filter(searchString -> searchString.getCity().trim().equalsIgnoreCase(search)||searchString.getState().trim().equalsIgnoreCase(search)).forEach(System.out::println);
+		personList(fileName).stream().filter(searchString -> searchString.getCity().equalsIgnoreCase(search)||searchString.getState().trim().equalsIgnoreCase(search)).forEach(System.out::println);
 		addressBookArrayList.clear();
 	}
 	

@@ -8,6 +8,7 @@ public interface AddressBookInterface {
 	public void sort(String fileName);
 	public void searchPerson(String fileName);
 	public void display(String fileName);
-	public void newAddressBook();
+	public void newAddressBook() throws Throwable;
 	public String selectAddressBook();
+	public void addJsonFile(String fileName);
 }

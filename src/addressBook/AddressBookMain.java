@@ -11,9 +11,11 @@ public class AddressBookMain {
 	public static final int SORT=6;
 	public static final int SEARCH=7;
 	public static final int NEW_ADDRESS_BOOK=8;
+	public static final int ADD_JSON_FILE=9;
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Throwable {
 		AddressBookInterface addressBookImplementation = new AddressBookImplementation();
+		AddressBookImplementation addressBookImpl = new AddressBookImplementation();
 		Scanner sc = new Scanner(System.in);
 		String fileName;
 		while(true) {
@@ -25,7 +27,8 @@ public class AddressBookMain {
 			+"\t5.Sort by Name in address Book\n"
 			+"\t6.Sort by City,State,Zip in address Book\n"
 			+"\t7.Search Person in address Book\n"
-			+"\t8.Add New Address Book");
+			+"\t8.Add New Address Book\n"
+			+"\t9.Add address book in json format");
 			System.out.println("Enter your choice - ");  
 			int choice= sc.nextInt();
 			switch(choice) {
@@ -60,6 +63,9 @@ public class AddressBookMain {
 				case NEW_ADDRESS_BOOK:
 					addressBookImplementation.newAddressBook();
 					break;
+				case ADD_JSON_FILE:
+					fileName = addressBookImplementation.selectAddressBook();
+					addressBookImpl.addJsonFile(fileName);
 				default:
 					System.out.println("Wrong choice! Please select from the above option");
 					break;
